@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  jenkins_local:
+    container_name: "jenkins2"
+    build: "Jenkins/"
+    networks:
+      - bridge_integracion_continua   
+    ports:
+      - "8085:8080"
+      - "50000:50000"
+    volumes:
+      - type: "volume"
+        source: "vol_jenkins_home"
+        target: "/var/jenkins_home"
+
+  sonarqube_local:
+    container_name: "sonarqube2"
+    image: "sonarqube:8.4.2-community"   
+    networks:
+      - bridge_integracion_continua
+    ports:
+      - "9000:9000"
+    volumes:
+      - type: "volume"
+        source: "vol_sonarqube_data"
+        target: "/opt/sonarqube/data"
+      
+volumes: 
+  vol_jenkins_home:
+    external: true
+    name: "vol_jenkins_home" 
+  vol_sonarqube_data:
+    external: true
+    name: "vol_sonarqube_data"
+
+networks:
+  bridge_integracion_continua:
+    external: true
+    name: "bridge_integracion_continua"
+    driver: "brigde"
